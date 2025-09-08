@@ -15,9 +15,6 @@ import com.Anshu.entity.Category;
 import com.Anshu.repository.CategoryRepository;
 import com.Anshu.service.CategoryService;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -37,14 +34,33 @@ public class CategoryServiceImpl implements CategoryService {
 
 		Category category = mapper.map(categoryDto, Category.class);
 
-		category.setIsDeleted(false);
-		category.setCreatedBy(1);
-		category.setCreatedOn(new Date());
+		if (ObjectUtils.isEmpty(category.getId())) {
+			category.setIsDeleted(false);
+			category.setCreatedBy(1);
+			category.setCreatedOn(new Date());
+		} else {
+			updateCategory(category);
+		}
+
 		Category saveCategory = categoryRepo.save(category);
 		if (ObjectUtils.isEmpty(saveCategory)) {
 			return false;
 		}
 		return true;
+	}
+
+	private void updateCategory(Category category) {
+		Optional<Category> findById = categoryRepo.findById(category.getId());
+		if (findById.isPresent()) {
+			Category existCategory = findById.get();
+        	category.setIsDeleted(existCategory.getIsDeleted());
+        	category.setCreatedBy(existCategory.getCreatedBy());
+        	category.setCreatedOn(existCategory.getCreatedOn());
+        	
+        	category.setUpdatedBy(1);
+        	category.setUpdatedOn(new Date());
+        }
+		
 	}
 
 	@Override
@@ -65,7 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryDto getCategoryById(Integer id) {
 		Optional<Category> findByCategory = categoryRepo.findByIdAndIsDeletedFalse(id);
-		if(findByCategory.isPresent()) {
+		if (findByCategory.isPresent()) {
 			Category category = findByCategory.get();
 			return mapper.map(category, CategoryDto.class);
 		}
@@ -76,8 +92,8 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Boolean deleteCategory(Integer id) {
 		Optional<Category> findByCategory = categoryRepo.findById(id);
-		
-		if(findByCategory.isPresent()) {
+
+		if (findByCategory.isPresent()) {
 			Category category = findByCategory.get();
 			category.setIsDeleted(true);
 			categoryRepo.save(category);
@@ -85,5 +101,5 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 		return false;
 	}
-	
+
 }
