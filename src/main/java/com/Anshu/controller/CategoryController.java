@@ -2,7 +2,6 @@ package com.Anshu.controller;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Anshu.dto.CategoryDto;
 import com.Anshu.dto.CategoryResponse;
 import com.Anshu.service.CategoryService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 
 @RestController
 @RequestMapping("/api/V1/category")
@@ -63,14 +66,13 @@ public class CategoryController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getCategoryById(@PathVariable Integer id) {
-		CategoryDto categoryDto = categoryService.getCategoryById(id);
+	public ResponseEntity<?> getCategoryById(@PathVariable Integer id) throws Exception {
 
+		CategoryDto categoryDto = categoryService.getCategoryById(id);
 		if (ObjectUtils.isEmpty(categoryDto)) {
-			return new ResponseEntity<>("category not found with id =" + id, HttpStatus.NOT_FOUND);
-		} else {
-			return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+			return new ResponseEntity<>("Internal server error", HttpStatus.NOT_FOUND);
 		}
+		return new ResponseEntity<>(categoryDto, HttpStatus.OK);
 
 	}
 
