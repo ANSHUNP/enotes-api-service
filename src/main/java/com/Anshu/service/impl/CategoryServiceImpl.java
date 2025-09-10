@@ -6,12 +6,15 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.ResourceAccessException;
 
 import com.Anshu.dto.CategoryDto;
 import com.Anshu.dto.CategoryResponse;
 import com.Anshu.entity.Category;
+import com.Anshu.exception.ResourceNotFoundException;
 import com.Anshu.repository.CategoryRepository;
 import com.Anshu.service.CategoryService;
 
@@ -53,14 +56,14 @@ public class CategoryServiceImpl implements CategoryService {
 		Optional<Category> findById = categoryRepo.findById(category.getId());
 		if (findById.isPresent()) {
 			Category existCategory = findById.get();
-        	category.setIsDeleted(existCategory.getIsDeleted());
-        	category.setCreatedBy(existCategory.getCreatedBy());
-        	category.setCreatedOn(existCategory.getCreatedOn());
-        	
-        	category.setUpdatedBy(1);
-        	category.setUpdatedOn(new Date());
-        }
-		
+			category.setIsDeleted(existCategory.getIsDeleted());
+			category.setCreatedBy(existCategory.getCreatedBy());
+			category.setCreatedOn(existCategory.getCreatedOn());
+
+			category.setUpdatedBy(1);
+			category.setUpdatedOn(new Date());
+		}
+
 	}
 
 	@Override
@@ -79,10 +82,11 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryDto getCategoryById(Integer id) {
-		Optional<Category> findByCategory = categoryRepo.findByIdAndIsDeletedFalse(id);
-		if (findByCategory.isPresent()) {
-			Category category = findByCategory.get();
+	public CategoryDto getCategoryById(Integer id) throws Exception {
+		Category category = categoryRepo.findByIdAndIsDeletedFalse(id)
+				.orElseThrow(() -> new ResourceNotFoundException("category not found with id = " + id));
+		if (!ObjectUtils.isEmpty(category)) {
+			category.getName().toUpperCase();
 			return mapper.map(category, CategoryDto.class);
 		}
 		return null;
