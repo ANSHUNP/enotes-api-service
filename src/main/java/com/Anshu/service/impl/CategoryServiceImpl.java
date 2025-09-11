@@ -6,10 +6,8 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.client.ResourceAccessException;
 
 import com.Anshu.dto.CategoryDto;
 import com.Anshu.dto.CategoryResponse;
@@ -17,6 +15,7 @@ import com.Anshu.entity.Category;
 import com.Anshu.exception.ResourceNotFoundException;
 import com.Anshu.repository.CategoryRepository;
 import com.Anshu.service.CategoryService;
+import com.Anshu.util.Validation;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -27,13 +26,14 @@ public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	private ModelMapper mapper;
 
+	@Autowired
+	private Validation validation;
+	
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
 
-//		Category category = new Category();
-//		category.setName(categoryDto.getName());
-//		category.setDescription(categoryDto.getDescription());
-//		category.setIsActive(categoryDto.getIsActive());
+		//validation checking
+		validation.categoryValidation(categoryDto);
 
 		Category category = mapper.map(categoryDto, Category.class);
 
