@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 import com.Anshu.dto.CategoryDto;
 import com.Anshu.dto.CategoryResponse;
 import com.Anshu.entity.Category;
+import com.Anshu.exception.ExistDataException;
 import com.Anshu.exception.ResourceNotFoundException;
 import com.Anshu.repository.CategoryRepository;
 import com.Anshu.service.CategoryService;
@@ -28,18 +29,24 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private Validation validation;
-	
+
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
 
-		//validation checking
+		// validation checking
 		validation.categoryValidation(categoryDto);
 
+		// check category exist or not
+		Boolean exist = categoryRepo.existsByName(categoryDto.getName().trim());
+		if (exist) {
+			// throw error
+			throw new ExistDataException("category already exist");
+		}
 		Category category = mapper.map(categoryDto, Category.class);
 
 		if (ObjectUtils.isEmpty(category.getId())) {
 			category.setIsDeleted(false);
-			category.setCreatedBy(1);
+//			category.setCreatedBy(1);
 			category.setCreatedOn(new Date());
 		} else {
 			updateCategory(category);
