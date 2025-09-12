@@ -23,8 +23,8 @@ public class Validation {
 				error.put("name", "name field is empty or null");
 
 			} else {
-				if (categoryDto.getName().length() < 10) {
-					error.put("name", "name field minimum 10");
+				if (categoryDto.getName().length() < 3) {
+					error.put("name", "name field minimum 3");
 				}
 				if (categoryDto.getName().length() > 100) {
 					error.put("name", "name field maximum 100");
