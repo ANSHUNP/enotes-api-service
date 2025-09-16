@@ -9,7 +9,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.Anshu.dto.NotesDto;
 import com.Anshu.service.NotesService;
@@ -24,8 +26,9 @@ public class NotesController {
 	private NotesService notesService;
 
 	@PostMapping("/save")
-	public ResponseEntity<?> saveNotes(@RequestBody NotesDto notesDto) {
-		Boolean saveNotes = notesService.saveNotes(notesDto);
+	public ResponseEntity<?> saveNotes(@RequestParam String notes,
+			@RequestParam (required = false) MultipartFile file) throws Exception {
+		Boolean saveNotes = notesService.saveNotes(notes, file);
 		if (saveNotes) {
 			return CommonUtil.createBuildResponseMessage("notes save successfully", HttpStatus.CREATED);
 		}
@@ -38,7 +41,7 @@ public class NotesController {
 		if (CollectionUtils.isEmpty(notes)) {
 			return ResponseEntity.noContent().build();
 		}
-		return CommonUtil.createBuildResponse(notes,HttpStatus.OK);
+		return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
 	}
 
 }
