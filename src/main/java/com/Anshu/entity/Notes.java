@@ -32,5 +32,8 @@ public class Notes extends BaseModel {
 	
 	@ManyToOne
 	private Category category;//multiple notes in one category
+	
+	@ManyToOne
+	private FileDetails fileDetails;//one notes have multiple file
 
 }

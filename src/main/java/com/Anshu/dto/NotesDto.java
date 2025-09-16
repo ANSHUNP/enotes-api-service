@@ -29,6 +29,8 @@ public class NotesDto {
 	private Integer updatedBy;
 
 	private Date updatedOn;
+	
+	private FilesDto fileDetails;
 
 	@Setter
 	@Getter
@@ -37,5 +39,21 @@ public class NotesDto {
 	public static class CategoryDto {
 		private Integer id;
 		private String name;
+	}
+	
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class FilesDto {
+		private Integer id;
+
+		private String uploadFileName;
+
+		private String originalFilename;
+
+		private String displayFilename;
+
+	
 	}
 }

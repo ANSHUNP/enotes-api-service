@@ -3,15 +3,16 @@ package com.Anshu.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.Anshu.dto.NotesDto;
-import com.Anshu.exception.ResourceNotFoundException;
+
 
 @Service
 public interface NotesService {
 
 	// saving NotesDto
-	public Boolean saveNotes(NotesDto notesDto) throws ResourceNotFoundException;
+	public Boolean saveNotes(String notes,MultipartFile file) throws Exception;
 
 	// getting all notes
 	public List<NotesDto> getAllNotes();
