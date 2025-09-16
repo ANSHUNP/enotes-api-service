@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.Anshu.dto.NotesDto;
+import com.Anshu.entity.FileDetails;
 
 
 @Service
@@ -16,4 +17,12 @@ public interface NotesService {
 
 	// getting all notes
 	public List<NotesDto> getAllNotes();
+
+	//downloading file 
+	public byte[] downloadFile(FileDetails fileDetails) throws Exception;
+
+	public FileDetails getFileDetails(Integer id) throws Exception;
+
+
+	
 }
