@@ -9,13 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.Anshu.dto.NotesDto;
+import com.Anshu.dto.NotesResponse;
 import com.Anshu.entity.FileDetails;
 import com.Anshu.service.NotesService;
 import com.Anshu.util.CommonUtil;
@@ -39,6 +39,7 @@ public class NotesController {
 		return CommonUtil.createErrorResponseMESSAGE("Notes not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	// downloading file of specific id
 	@GetMapping("/download/{id}")
 	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {
 
@@ -53,6 +54,7 @@ public class NotesController {
 		return ResponseEntity.ok().headers(headers).body(data);
 	}
 
+	// getting all category
 	@GetMapping("/")
 	public ResponseEntity<?> getAllNotes() {
 		List<NotesDto> notes = notesService.getAllNotes();
@@ -61,5 +63,18 @@ public class NotesController {
 		}
 		return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
 	}
+
+	// pagination
+	@GetMapping("/user-notes")
+	public ResponseEntity<?> getAllNotesByUser(
+	        @RequestParam( name="pageNo" , defaultValue = "0") Integer pageNo,
+	        @RequestParam(name=" pageSize",  defaultValue = "10") Integer pageSize) {
+
+	    Integer userId = 1;
+	    NotesResponse notes = notesService.getAllNotesByUser(userId, pageNo, pageSize);
+
+	    return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
+	}
+
 
 }

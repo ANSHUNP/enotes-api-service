@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.Anshu.dto.NotesDto;
+import com.Anshu.dto.NotesResponse;
 import com.Anshu.entity.FileDetails;
 
 
@@ -22,6 +23,8 @@ public interface NotesService {
 	public byte[] downloadFile(FileDetails fileDetails) throws Exception;
 
 	public FileDetails getFileDetails(Integer id) throws Exception;
+
+	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize);
 
 
 	
