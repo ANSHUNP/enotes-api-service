@@ -1,5 +1,6 @@
 package com.Anshu.service.impl;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import org.springframework.util.StreamUtils;
@@ -15,13 +16,15 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.Anshu.dto.NotesDto;
 import com.Anshu.dto.NotesDto.CategoryDto;
-import com.Anshu.dto.NotesDto.FilesDto;
+import com.Anshu.dto.NotesResponse;
 import com.Anshu.entity.FileDetails;
 import com.Anshu.entity.Notes;
 import com.Anshu.exception.ResourceNotFoundException;
@@ -147,6 +150,14 @@ public class NotesServiceImpl implements NotesService {
 		return notesRepo.findAll().stream().map(note -> mapper.map(note, NotesDto.class)).toList();
 
 	}
+	
+	@Override
+	public FileDetails getFileDetails(Integer id) throws Exception {
+		FileDetails fileDtls = fileRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("file is not available"));
+
+		return fileDtls;
+	}
 
 	@Override
 	public byte[] downloadFile(FileDetails fileDetails) throws Exception {
@@ -157,11 +168,28 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public FileDetails getFileDetails(Integer id) throws Exception {
-		FileDetails fileDtls = fileRepo.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("file is not available"));
-
-		return fileDtls;
+	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
+		
+	   PageRequest pageable=PageRequest.of(pageNo, pageSize);
+		Page<Notes> pageNotes=notesRepo.findByCreatedBy(userId,pageable);
+		
+		List<NotesDto> notesDto=pageNotes.get().map(n-> mapper.map(n,NotesDto.class)).toList();
+		
+		NotesResponse notes=NotesResponse.builder()
+				.notes(notesDto)
+				.pageNo(pageNotes.getNumber())
+		        .pageSize(pageNotes.getSize())
+		        .totalElements(pageNotes.getTotalElements())
+		        .totalPages(pageNotes.getTotalPages())
+		        .isFirst(pageNotes.isFirst())
+		        .isLast(pageNotes.isLast())
+		        .build();
+		
+				
+				return notes;
+		
 	}
+
+	
 
 }

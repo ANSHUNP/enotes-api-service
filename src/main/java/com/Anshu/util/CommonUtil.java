@@ -38,9 +38,11 @@ public class CommonUtil {
 		case "pdf":
 			return "application/pdf";
 		case "xlsx":
-			return "application/vnd.openxmlformats-officedocument.spreadsheettml.sheet";
+			return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+		
+				
 		case "txt":
-			return "text/plan";
+			return "text/plaIn";
 		case "png":
 			return "image/png";
 		case "jpeg":
