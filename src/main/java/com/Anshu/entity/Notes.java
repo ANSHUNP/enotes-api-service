@@ -1,5 +1,7 @@
 package com.Anshu.entity;
 
+import java.util.Date;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
@@ -15,7 +17,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor 
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -25,15 +27,19 @@ public class Notes extends BaseModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	private String title;
-	
+
 	private String description;
-	
+
 	@ManyToOne
-	private Category category;//multiple notes in one category
-	
+	private Category category;// multiple notes in one category
+
 	@ManyToOne
-	private FileDetails fileDetails;//one notes have multiple file
+	private FileDetails fileDetails;// one notes have multiple file
+
+	private Boolean isDeleted;
+
+	private Date deletedOn;
 
 }

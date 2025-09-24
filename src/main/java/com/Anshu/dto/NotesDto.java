@@ -31,6 +31,10 @@ public class NotesDto {
 	private Date updatedOn;
 	
 	private FilesDto fileDetails;
+	
+	private boolean isDeleted;
+	
+	private Date deletedOn;
 
 	@Setter
 	@Getter
@@ -56,4 +60,10 @@ public class NotesDto {
 
 	
 	}
+
+	public void setIsDeleted(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
